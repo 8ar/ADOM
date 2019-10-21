@@ -53,6 +53,7 @@ void setup(){
 
     int val=int(ArduinoUno.parseFloat());
     
+    Serial.println(val);
     
             if(ArduinoUno.read()=='\n')
               {

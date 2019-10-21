@@ -18,8 +18,8 @@
 #include <IRremote.h>
 
 int RECV_PIN = 11;
-int BUTTON_PIN = 4;
-int STATUS_PIN = 8;
+int BUTTON_PIN = 12;
+int STATUS_PIN = 13;
 
 IRrecv irrecv(RECV_PIN);
 IRsend irsend;
@@ -37,87 +37,38 @@ void setup()
 // Storage for the recorded code
 int codeType = -1; // The type of code
 unsigned long codeValue; // The code value if not raw
-//unsigned int rawCodes[RAWBUF]; // The durations if raw
-unsigned int rawCodes[RAWBUF];
+unsigned int rawCodes[RAWBUF]; // The durations if raw
 int codeLen; // The length of the code
-
-unsigned long          bits1;
-unsigned long          bits2;
-unsigned long          bits3;
-unsigned long          bits4;
-
- 
-    unsigned long          value;
-    unsigned long          value2;
-    unsigned long          value3;
-    unsigned long          value4;
-
-
 int toggle = 0; // The RC5/6 toggle state
-char completecode ="";
 
 // Stores the code for later playback
 // Most of this code is just logging
 void storeCode(decode_results *results) {
   codeType = results->decode_type;
   int count = results->rawlen;
-  //if (codeType == UNKNOWN) {
-    //Serial.println("Received unknown code, saving as raw");
+  if (codeType == UNKNOWN) {
+    Serial.println("Received unknown code, saving as raw");
     codeLen = results->rawlen - 1;
     // To store raw codes:
     // Drop first value (gap)
     // Convert from ticks to microseconds
     // Tweak marks shorter, and spaces longer to cancel out IR receiver distortion
     for (int i = 1; i <= codeLen; i++) {
-      
       if (i % 2) {
         // Mark
         rawCodes[i - 1] = results->rawbuf[i]*USECPERTICK - MARK_EXCESS;
-        //Serial.print(" m");
+        Serial.print(" m");
       } 
       else {
         // Space
         rawCodes[i - 1] = results->rawbuf[i]*USECPERTICK + MARK_EXCESS;
-        //Serial.print(" s");
+        Serial.print(" s");
       }
-      
-      //Serial.print(rawCodes[i - 1], DEC);
+      Serial.print(rawCodes[i - 1], DEC);
     }
     Serial.println("");
-
-    bits1=results->bits1;
-    bits2=results->bits2;
-    bits3=results->bits3;
-    bits4=results->bits4;
-    value=results->value;
-    value2=results->value2;
-    value3=results->value3;
-    value4=results->value4;
-    char space=char(9);
-    Serial.print(results->decode_type, DEC);
-    Serial.print(space);
-    Serial.print(results->value,HEX);
-    Serial.print(space);
-    Serial.print(results->value2,HEX);
-    Serial.print(space);
-    Serial.print(results->value3,HEX);
-    Serial.print(space);
-    Serial.print(results->value4,HEX);
-    Serial.print(space);
-    Serial.print(results->bits1,DEC);
-    Serial.print(space);
-    Serial.print(results->bits2,DEC);
-    Serial.print(space);
-    Serial.print(results->bits3,DEC);
-    Serial.print(space);
-    Serial.print(results->bits4,DEC);
-
-    
-   /* Serial.print(results->bits, DEC);
-    Serial.print(results->rawlen, DEC);*/
-    
-  //}
-  /*else {
+  }
+  else {
     if (codeType == NEC) {
       Serial.print("Received NEC: ");
       if (results->value == REPEAT) {
@@ -149,11 +100,11 @@ void storeCode(decode_results *results) {
     Serial.println(results->value, HEX);
     codeValue = results->value;
     codeLen = results->bits;
-  }*/
+  }
 }
 
 void sendCode(int repeat) {
-  /*if (codeType == NEC) {
+  if (codeType == NEC) {
     if (repeat) {
       irsend.sendNEC(REPEAT, codeLen);
       Serial.println("Sent NEC repeat");
@@ -198,62 +149,11 @@ void sendCode(int repeat) {
       Serial.println(codeValue, HEX);
     }
   } 
-  else if (codeType == UNKNOWN  i.e. raw ) {
+  else if (codeType == UNKNOWN /* i.e. raw */) {
     // Assume 38 KHz
     irsend.sendRaw(rawCodes, codeLen, 38);
-    Serial.println("Sent raw "+String(codeLen));
-    */
-
-    
-value=0xc3;
-value2=0xEA070005;
-value3=0x00040000;
-value4=0x0400005B;
-    irsend.sendNEC(value, 8,1);
-    Serial.print("Sent NEC part1 ");
-    Serial.println(value, HEX);
-
-
-      irsend.sendNEC(value2, 32,2);
-      Serial.print("Sent NEC part2 ");
-      Serial.println(value2, HEX);
-
-       irsend.sendNEC(value3, 32,3);
-      Serial.print("Sent NEC part3 ");
-      Serial.println(value3, HEX);
-
-      
-      irsend.sendNEC(value4, 32,4);
-      Serial.print("Sent NEC part4 ");
-      Serial.println(value4, HEX);
-
-  
-
-/*
-      irsend.sendNEC(value, bits1,1);
-      Serial.print("Sent NEC part1 ");
-      Serial.println(value, HEX);
-
-      
-      irsend.sendNEC(value2, bits2,2);
-      Serial.print("Sent NEC part2 ");
-      Serial.println(value2, HEX);
-
-      
-      irsend.sendNEC(value3, bits3,3);
-      Serial.print("Sent NEC part3 ");
-      Serial.println(value3, HEX);
-
-      
-      irsend.sendNEC(value4, bits4,4);
-      Serial.print("Sent NEC part4 ");
-      Serial.println(value4, HEX);
-*/
-      
-
-
-      
-  //}
+    Serial.println("Sent raw");
+  }
 }
 
 int lastButtonState;

@@ -112,21 +112,23 @@ void storeCode(decode_results *results) {
 void sendCode(int repeat) {
   if (codeType == NEC) {
     if (repeat) {
-      irsend.sendNEC(REPEAT, codeLen);
+      //irsend.sendNEC(REPEAT, codeLen);
+      irsend.sendNEC(0xc3, 8,1);
       Serial.println("Sent NEC repeat");
     } 
     else {
-      irsend.sendNEC(codeValue, codeLen);
+      irsend.sendNEC(0xc3, 8,1);
+      //irsend.sendNEC(codeValue, codeLen);
       Serial.print("Sent NEC ");
       Serial.println(codeValue, HEX);
     }
   } 
-  else if (codeType == SONY) {
+  /*else if (codeType == SONY) {
     irsend.sendSony(codeValue, codeLen);
     Serial.print("Sent Sony ");
     Serial.println(codeValue, HEX);
-  } 
-  else if (codeType == PANASONIC) {
+  } */
+  /*else if (codeType == PANASONIC) {
     irsend.sendPanasonic(codeValue, codeLen);
     Serial.print("Sent Panasonic");
     Serial.println(codeValue, HEX);
@@ -154,7 +156,7 @@ void sendCode(int repeat) {
       Serial.print("Sent RC6 ");
       Serial.println(codeValue, HEX);
     }
-  } 
+  } */
   else if (codeType == UNKNOWN /* i.e. raw */) {
     // Assume 38 KHz
     irsend.sendRaw(rawCodes, codeLen, 38);

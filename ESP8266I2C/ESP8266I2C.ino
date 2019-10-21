@@ -29,9 +29,11 @@ void setup(){
 
  void loop()
  {
-
 //
-
+ESP8266W.print("HOLA MUNDO");
+Serial.println("Client disconnected");
+delay(1000);
+/*
 WiFiClient client = server.available();
   if(!client) {
      return;
@@ -107,4 +109,5 @@ delay(3000);
   ESP8266W.println("\n");
   
   delay(5000);*/
+  
  }
