@@ -19,7 +19,7 @@
 	const char *mqtt_pass = "40bd001563085fc35165329ea1ff5c5ecbdbbeef";
   // char device_id="00002-1234";
   // char usertopic="20/#";
-	const char *switch_topic="20/curtain_rf/00003-77777";
+	const char *switch_topic="20/00007-666666";
  // string subtopic="switch/"+ device_id;
  // string switch_topic=usertopic.replace(,);
   // #define LED_BUILTIN 4
@@ -108,16 +108,17 @@ incoming += (char)payload[i];
 incoming.trim();
 Serial.println("Mensaje -> " + incoming);
 
-ESP8266W.print(incoming);
+for (size_t i = 0; i < 2; i++) {
+  ESP8266W.print(incoming);
+  delay(500);
+}
+
+
+
 
 
 }
-// if ( incoming == "on") {
-// digitalWrite(LED_BUILTIN, HIGH);
-// } else {
-// digitalWrite(LED_BUILTIN, LOW);
-// }
-// }
+
 
 void reconnect() {
 
