@@ -9,7 +9,7 @@
 //                               LLLLL   GGG
 //==============================================================================
 
-#define LG_BITS 54
+#define LG_BITS 102
 
 #define LG_HDR_MARK 8000
 #define LG_HDR_SPACE 4000
